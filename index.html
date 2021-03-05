@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AFI SWiM</title>
+  </head>
+  <body>
+    <p id="status">Select AFI to upload</p>
+    <form
+      method="post"
+      action="upload"
+      enctype="multipart/form-data"
+      onsubmit="updateStatus()"
+    >
+      <input name="afi" type="file" />
+      <input type="submit" />
+    </form>
+  </body>
+  <script>
+    function updateStatus() {
+      document.getElementById("status").innerHTML = "Converting AFI...";
+    }
+  </script>
+</html>
