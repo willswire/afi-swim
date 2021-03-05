@@ -1,1 +1,0 @@
-# AFI SWiM Web Version
