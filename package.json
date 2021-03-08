@@ -1,6 +1,6 @@
 {
   "name": "afi-swim-web",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Extract shall/will/must from Air Force Instruction manuals",
   "main": "server.js",
   "scripts": {
@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "exceljs": "*",
-    "pdf-parse": "*",
+    "exceljs": "^4.2.0",
+    "pdf-parse": "^1.1.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express-fileupload": "^1.2.1",
@@ -20,12 +20,12 @@
     "node": "12.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/hello-express"
+    "url": "https://github.com/willswire/afi-swim-web"
   },
   "license": "MIT",
   "keywords": [
-    "node",
-    "glitch",
-    "express"
+    "air force",
+    "instruction manual",
+    "reference"
   ]
 }

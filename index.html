@@ -3,22 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <title>AFI SWiM</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+      crossorigin="anonymous"
+    ></script>
   </head>
-  <body>
-    <p id="status">Select AFI to upload</p>
-    <form
-      method="post"
-      action="upload"
-      enctype="multipart/form-data"
-      onsubmit="updateStatus()"
-    >
-      <input name="afi" type="file" />
-      <input type="submit" />
-    </form>
+  <body class="d-flex flex-column">
+    <header class="text-light text-center mt-auto bg-danger">
+      UNCLASSIFIED (NO FOUO OR PII)
+    </header>
+    <main role="main" class="container w-75">
+      <div class="jumbotron mt-3">
+        <h1>AFI SWiM</h1>
+        <p class="lead">
+          Extract <b>Shall</b>, <b>Will</b>, and <b>Must</b> keywords from AFIs
+          for better readability and reference. The resulting Excel workbook
+          also includes a column for waiver authority (tier level).
+        </p>
+        <hr class="my-4" />
+        <p>
+          Click the 'Select File' button to choose your PDF file to upload.
+          Then, click the 'Convert' button to run the conversion tool. After
+          5-20 seconds, your Excel workbook file will begin to download automatically.
+        </p>
+        <form
+          method="post"
+          action="upload"
+          enctype="multipart/form-data"
+          onsubmit="updateStatus()"
+        >
+          <label class="btn btn-lg btn-secondary">
+            Select File<input name="afi" type="file" hidden />
+          </label>
+          <label id="status" class="btn btn-lg btn-primary"
+            >Convert »<input type="submit" hidden />
+          </label>
+        </form>
+      </div>
+    </main>
   </body>
-  <script>
-    function updateStatus() {
-      document.getElementById("status").innerHTML = "Converting AFI...";
-    }
-  </script>
 </html>
