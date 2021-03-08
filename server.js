@@ -24,7 +24,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-// https://expressjs.com/en/starter/basic-routing.html
 app.get("/", (request, response) => {
   response.sendFile(__dirname + "/index.html");
 });
@@ -115,9 +114,12 @@ function convertAFI(dataBuffer, res) {
       return workbook;
     })
     .then(workbook => {
+      // write the workbook to the buffer
       return workbook.xlsx.writeBuffer();
     })
     .then(buffer => {
+      // send a response to the original POST HTTP request
+      // of the converted PDF now stored in the buffer
       res.writeHead(200, {
         "Content-Type": "application/octet-stream",
         "Content-disposition": "attachment; filename=afi.xlsx"
@@ -125,33 +127,12 @@ function convertAFI(dataBuffer, res) {
       res.write(buffer);
       res.end();
     });
-  /*
-  .then(workbook =>{
-    status.reply('upload-reply', 'Done')
-    dialog.showSaveDialog({ 
-        title: 'Select the File Path to save', 
-        defaultPath: path.join(__dirname, '../assets/workbook.xlsx'), 
-        buttonLabel: 'Save', 
-        filters: [ 
-            { 
-                name: 'Excel Workbook', 
-                extensions: ['xlsx'] 
-            }, ], 
-        properties: [] 
-    }).then(file => { 
-        console.log(file.filePath.toString()); 
-        workbook.xlsx.writeFile(file.filePath.toString());
-      })
-      .then(() => {
-        status.reply('upload-reply', 'Reset')
-      });
-    });
-    */
 }
 
-// upoad single file
+// This route is triggered when the form is submitted from the main page.
+// The visitor will see the browser loading as the POST response is dependent
+// on the file returned from the backend server
 app.post("/upload", async (req, res) => {
-  //console.log("File upload attempted")
   try {
     if (!req.files) {
       res.send({
@@ -159,20 +140,17 @@ app.post("/upload", async (req, res) => {
         message: "No file uploaded"
       });
     } else {
-      //Use the name of the input field (i.e. "afi") to retrieve the uploaded file
+      // Use the name of the input field (i.e. "afi") to retrieve the uploaded file
       let afi = req.files.afi;
-      //console.log(req.files.afi);
-      //console.log("We have the meats!")
-      if(req.files.afi.mimetype === "application/pdf") convertAFI(afi.data, res);
+
+      // If the uploaded file is of type PDF, then run the conversion function
+      if (req.files.afi.mimetype === "application/pdf")
+        convertAFI(afi.data, res);
     }
   } catch (err) {
-    //console.log(err)
     res.status(500).send(err);
   }
 });
 
-//start app
-const port = process.env.PORT || 3000;
-
-//app.listen(port, () => console.log(`App is listening on port ${port}.`));
-app.listen(port);
+// Run the application on port 3000
+app.listen(3000);
