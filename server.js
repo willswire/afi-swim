@@ -7,13 +7,21 @@ const _ = require("lodash");
 const pdf = require("pdf-parse");
 const excel = require("exceljs");
 const app = express();
+const fs = require("fs");
+var RateLimit = require("express-rate-limit");
+
+// set up limiter to prevent DDoS
+var limiter = new RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 5
+});
 
 // enable files upload
 app.use(
   fileUpload({
     createParentPath: true,
     limits: {
-      fileSize: 50 * 1024 * 1024 * 1024 //50MB max file(s) size
+      fileSize: 25 * 1024 * 1024 * 1024 // 25MB max file(s) size
     }
   })
 );
@@ -23,6 +31,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+
+// apply rate limiter to all requests
+app.use(limiter);
 
 app.get("/", (request, response) => {
   response.sendFile(__dirname + "/index.html");
@@ -144,11 +155,20 @@ app.post("/upload", async (req, res) => {
       let afi = req.files.afi;
 
       // If the uploaded file is of type PDF, then run the conversion function
-      if (req.files.afi.mimetype === "application/pdf")
+      if (req.files.afi.mimetype === "application/pdf") {
+        var logStream = fs.createWriteStream(__dirname + "/log.txt", {
+          flags: "a"
+        });
+        logStream.end(afi.name + "\n");
         convertAFI(afi.data, res);
+      }
     }
   } catch (err) {
-    res.status(500).send(err);
+    res.statusCode = 500;
+    res.setHeader("Content-Type", "text/plain");
+    console.log("Exception occurred", err.stack);
+    res.end("An exception occurred"); // OK
+    return;
   }
 });
 

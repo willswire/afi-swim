@@ -14,10 +14,15 @@
       integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
       crossorigin="anonymous"
     ></script>
+    <script>
+      function updateStatus() {
+        document.getElementById("convertButton").innerHTML = "Converting...";
+      }
+    </script>
   </head>
   <body class="d-flex flex-column">
-    <header class="text-light text-center mt-auto bg-danger">
-      UNCLASSIFIED (NO FOUO OR PII)
+    <header class="text-light text-center mt-auto bg-success">
+      <strong>UNCLASSIFIED</strong>
     </header>
     <main role="main" class="container w-75">
       <div class="jumbotron mt-3">
@@ -31,7 +36,8 @@
         <p>
           Click the 'Select File' button to choose your PDF file to upload.
           Then, click the 'Convert' button to run the conversion tool. After
-          5-20 seconds, your Excel workbook file will begin to download automatically.
+          5-20 seconds, your Excel workbook file will begin to download
+          automatically.
         </p>
         <form
           method="post"
@@ -42,11 +48,25 @@
           <label class="btn btn-lg btn-secondary">
             Select File<input name="afi" type="file" hidden />
           </label>
-          <label id="status" class="btn btn-lg btn-primary"
+          <label id="convertButton" class="btn btn-lg btn-primary"
             >Convert »<input type="submit" hidden />
           </label>
         </form>
       </div>
     </main>
+    <div class="fixed-bottom text-center pt-auto my-5 blockquote-footer">
+      <p>
+        Questions?
+        <a href="mailto:willswire@icloud.com">Send me an email</a>
+      </p>
+      <p>
+        <a href="https://github.com/willswire/afi-swim-web" target="_blank"
+          >View the code on GitHub</a
+        >
+      </p>
+    </div>
+    <footer class="text-light text-center pt-auto bg-success fixed-bottom">
+      <strong>UNCLASSIFIED</strong>
+    </footer>
   </body>
 </html>
