@@ -5,6 +5,7 @@ dependencies:
   express: 4.17.1
   express-fileupload: 1.2.1
   express-rate-limit: 5.2.6
+  helmet: 4.4.1
   lodash: 4.17.21
   morgan: 1.10.0
   pdf-parse: 1.1.1
@@ -475,6 +476,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-nTnJ528pbqxYanhpDYsi4Rd8MAeaBA67+RZ10CM1m3bTAVFEDcd5AuA4a6W5YkGZ1iNXHzZz8T6TBKLeBuNriQ==
+  /helmet/4.4.1:
+    dev: false
+    engines:
+      node: '>=10.0.0'
+    resolution:
+      integrity: sha512-G8tp0wUMI7i8wkMk2xLcEvESg5PiCitFMYgGRc/PwULB0RVhTP5GFdxOwvJwp9XVha8CuS8mnhmE8I/8dx/pbw==
   /http-errors/1.7.2:
     dependencies:
       depd: 1.1.2
@@ -1055,6 +1062,7 @@ specifiers:
   express: ^4.17.1
   express-fileupload: ^1.2.1
   express-rate-limit: ^5.2.6
+  helmet: ^4.4.1
   lodash: ^4.17.21
   morgan: ^1.10.0
   pdf-parse: ^1.1.1
