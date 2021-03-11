@@ -1,20 +1,26 @@
-const express = require("express");
+// required modules for web stuff
 const fileUpload = require("express-fileupload");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const _ = require("lodash");
+const rateLimit = require("express-rate-limit");
+const express = require("express");
+const helmet = require("helmet");
+const app = express();
+
+// required modules for conversion stufff
 const pdf = require("pdf-parse");
 const excel = require("exceljs");
-const app = express();
 const fs = require("fs");
-var RateLimit = require("express-rate-limit");
 
-// set up limiter to prevent DDoS
-var limiter = new RateLimit({
+// set up limiter to prevent DDoS attacks
+var limiter = new rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 5
 });
+
+// apply rate limiter to all requests
+app.use(limiter);
+
+// deploy helmet for additional system hardening
+app.use(helmet());
 
 // enable file upload
 app.use(
@@ -25,15 +31,6 @@ app.use(
     }
   })
 );
-
-//add other middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan("dev"));
-
-// apply rate limiter to all requests
-app.use(limiter);
 
 app.get("/", (request, response) => {
   response.sendFile(__dirname + "/index.html");
@@ -172,5 +169,4 @@ app.post("/upload", async (req, res) => {
   }
 });
 
-// Run the application on port 3000
 app.listen(3000);
