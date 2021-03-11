@@ -9,16 +9,6 @@
       integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
       crossorigin="anonymous"
     />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      function updateStatus() {
-        document.getElementById("convertButton").innerHTML = "Converting...";
-      }
-    </script>
   </head>
   <body class="d-flex flex-column">
     <header class="text-light text-center mt-auto bg-success">
@@ -39,12 +29,7 @@
           5-20 seconds, your Excel workbook file will begin to download
           automatically.
         </p>
-        <form
-          method="post"
-          action="upload"
-          enctype="multipart/form-data"
-          onsubmit="updateStatus()"
-        >
+        <form method="post" action="upload" enctype="multipart/form-data">
           <label class="btn btn-lg btn-secondary">
             Select File<input name="afi" type="file" hidden />
           </label>
