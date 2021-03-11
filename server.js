@@ -8,7 +8,6 @@ const pdf = require("pdf-parse");
 const excel = require("exceljs");
 const app = express();
 const fs = require("fs");
-const helmet = require("helmet");
 var RateLimit = require("express-rate-limit");
 
 // set up limiter to prevent DDoS
@@ -17,10 +16,7 @@ var limiter = new RateLimit({
   max: 5
 });
 
-// use Helmet for other security measures
-app.use(helmet());
-
-// enable files upload
+// enable file upload
 app.use(
   fileUpload({
     createParentPath: true,
