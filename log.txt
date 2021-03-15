@@ -32,3 +32,5 @@ afi36-2903.pdf
 afman13-204v3.pdf
 AFI 36-2646 SF Training and Stan-Eval (ANG PM Combo).pdf
 afman11-421.pdf
+afi1-1.pdf
+AFROTCI 36-2011v3 30 Dec 20.pdf
