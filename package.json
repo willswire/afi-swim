@@ -7,12 +7,12 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
     "exceljs": "^4.2.0",
-    "pdf-parse": "^1.1.1",
+    "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "express-rate-limit": "^5.2.6",
-    "helmet": "^4.4.1"
+    "helmet": "^4.4.1",
+    "pdf-parse": "^1.1.1"
   },
   "engines": {
     "node": "14.x"
