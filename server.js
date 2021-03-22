@@ -13,7 +13,7 @@ const fs = require("fs");
 // set up limiter to prevent DDoS attacks
 var limiter = new rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 5
+  max: 10
 });
 
 // apply rate limiter to all requests
