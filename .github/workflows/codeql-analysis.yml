@@ -17,8 +17,6 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ main ]
-  schedule:
-    - cron: '24 23 * * 4'
 
 jobs:
   analyze:
@@ -51,17 +49,11 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
-
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
-
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
-
-    #- run: |
-    #   make bootstrap
-    #   make release
-
+      
+    # Pefrom the CodeQL Analysis
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+
+    # Run Trufflehog Actions Scan
+    - name: Trufflehog Actions Scan
+      uses: edplato/trufflehog-actions-scan@v0.9j-beta
