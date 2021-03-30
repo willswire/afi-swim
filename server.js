@@ -13,7 +13,7 @@ const fs = require("fs");
 // set up limiter to prevent DDoS attacks
 var limiter = new rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 10
+  max: 100
 });
 
 // apply rate limiter to all requests
@@ -170,3 +170,4 @@ app.post("/upload", async (req, res) => {
 });
 
 app.listen(3000);
+console.log("Listening on port 3000...");
