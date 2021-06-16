@@ -23,19 +23,28 @@
           also includes a column for waiver authority (tier level).
         </p>
         <hr class="my-4" />
-
         <p>
           Click the 'Select File' button to choose your PDF file to upload.
-          Then, click the 'Convert' button to run the conversion tool. After
-          5-20 seconds, your Excel workbook file will begin to download
-          automatically.
+          Then, click the 'Convert' button to run the conversion tool.
+          <b>After ~30 seconds</b>, your Excel workbook file will begin to
+          download automatically. Also check out the
+          <strong
+            ><a href="https://apps.apple.com/us/app/afi-explorer/id1564964107"
+              >AFI Explorer</a
+            ></strong
+          >
+          app for iPhone and iPad (iOS)
         </p>
         <form method="post" action="upload" enctype="multipart/form-data">
           <label class="btn btn-lg btn-secondary">
             Select File<input name="afi" type="file" hidden />
           </label>
           <label id="convertButton" class="btn btn-lg btn-primary"
-            >Convert »<input type="submit" hidden />
+            >Convert »<input
+              type="submit"
+              onclick="alert('Please wait for your download to begin. This may take up to 30 seconds.')"
+              hidden
+            />
           </label>
         </form>
         <div id="content"></div>
@@ -45,5 +54,4 @@
       <strong>UNCLASSIFIED</strong>
     </footer>
   </body>
-  <script src="loadingStatus.js"></script>
 </html>
