@@ -17,7 +17,7 @@
     "node": "14.x"
   },
   "repository": {
-    "url": "hhttps://github.com/willswire/afi-swim"
+    "url": "https://github.com/willswire/afi-swim"
   },
   "license": "MIT",
   "keywords": [
