@@ -1,29 +1,31 @@
 {
-  "name": "afi-swim-web",
-  "version": "1.0.0",
-  "description": "Extract shall, will, and must keywords from Air Force Instruction manuals",
+  "name": "hello-node",
+  "version": "0.0.1",
+  "description": "A simple Node app built on fastify, instantly up and running.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "exceljs": "^4.2.0",
-    "express": "^4.17.1",
-    "express-fileupload": "^1.2.1",
-    "express-rate-limit": "^5.2.6",
-    "helmet": "^4.6.0",
-    "pdf-parse": "^1.1.1"
+    "fastify": "^3.19.0",
+    "fastify-formbody": "^5.0.0",
+    "fastify-static": "^4.2.2",
+    "handlebars": "^4.7.7",
+    "point-of-view": "^4.15.0",
+    "fastify-file-upload": "^3.0.0",
+    "pdf-parse": "^1.1.1",
+    "exceljs": "^4.2.0"
   },
   "engines": {
-    "node": "14.x"
+    "node": "12.x"
   },
   "repository": {
-    "url": "https://github.com/willswire/afi-swim-web"
+    "url": "https://glitch.com/edit/#!/glitch-hello-node"
   },
   "license": "MIT",
   "keywords": [
-    "air force",
-    "instruction manual",
-    "reference"
+    "node",
+    "glitch",
+    "express"
   ]
 }
