@@ -1,45 +1,37 @@
-// required modules for web stuff
-const fileUpload = require("express-fileupload");
-const rateLimit = require("express-rate-limit");
-const express = require("express");
-const helmet = require("helmet");
-const app = express();
-
-// required modules for conversion stufff
+// Required modules
+const path = require("path");
 const pdf = require("pdf-parse");
 const excel = require("exceljs");
 const fs = require("fs");
 
-// set up limiter to prevent DDoS attacks
-var limiter = new rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 100
+// Require the fastify framework and instantiate it
+const fastify = require("fastify")({
+  // Set this to true for detailed logging:
+  logger: false
 });
 
-// apply rate limiter to all requests
-app.use(limiter);
+// Require the fastify upload module
+fastify.register(require("fastify-file-upload"));
 
-// deploy helmet for additional system hardening
-app.use(helmet());
+// Setup our static files
+fastify.register(require("fastify-static"), {
+  root: path.join(__dirname, "public"),
+  prefix: "/"
+});
 
-// enable file upload
-app.use(
-  fileUpload({
-    createParentPath: true,
-    limits: {
-      fileSize: 25 * 1024 * 1024 * 1024 // 25MB max file(s) size
-    }
-  })
-);
-
-app.get("/", (request, response) => {
-  response.sendFile(__dirname + "/index.html");
+/**
+ * Our home page route
+ *
+ * Returns src/pages/index.hbs
+ */
+fastify.get("/", function(request, reply) {
+  reply.sendFile("index.html");
 });
 
 // Convert the AFI into plaintext and ask the user where to save
-function convertAFI(dataBuffer, res) {
+function convertAFI(name, data, reply) {
   //console.log("Converting AFI to Excel...")
-  pdf(dataBuffer)
+  pdf(data)
     .then(data => {
       // clean the text by removing all line breaks before paragraph numberings
       var cleanedText = data.text.replace(/\n[^\d+\.]/g, "");
@@ -128,46 +120,56 @@ function convertAFI(dataBuffer, res) {
     .then(buffer => {
       // send a response to the original POST HTTP request
       // of the converted PDF now stored in the buffer
-      res.writeHead(200, {
+      reply.raw.writeHead(200, {
         "Content-Type": "application/octet-stream",
-        "Content-disposition": "attachment; filename=afi.xlsx"
+        "Content-disposition":
+          "attachment; filename=" + name.replace(".pdf", "") + ".xlsx"
       });
-      res.write(buffer);
-      res.end();
+      reply.raw.write(buffer);
+      reply.raw.end();
     });
 }
 
-// This route is triggered when the form is submitted from the main page.
-// The visitor will see the browser loading as the POST response is dependent
-// on the file returned from the backend server
-app.post("/upload", async (req, res) => {
+/**
+ * Our POST route to handle and react to form submissions
+ *
+ * Accepts body data indicating the user choice
+ */
+fastify.post("/upload", async (request, reply) => {
   try {
-    if (!req.files) {
-      res.send({
+    if (!request.raw.files) {
+      reply.send({
         status: false,
         message: "No file uploaded"
       });
     } else {
       // Use the name of the input field (i.e. "afi") to retrieve the uploaded file
-      let afi = req.files.afi;
+      let afi = request.raw.files.afi;
 
       // If the uploaded file is of type PDF, then run the conversion function
-      if (req.files.afi.mimetype === "application/pdf") {
+      if (request.raw.files.afi.mimetype === "application/pdf") {
         var logStream = fs.createWriteStream(__dirname + "/log.txt", {
           flags: "a"
         });
         logStream.end(afi.name + "\n");
-        convertAFI(afi.data, res);
+        convertAFI(afi.name, afi.data, reply);
       }
     }
   } catch (err) {
-    res.statusCode = 500;
-    res.setHeader("Content-Type", "text/plain");
+    reply.statusCode = 500;
+    reply.raw.setHeader("Content-Type", "text/plain");
     console.log("Exception occurred", err.stack);
-    res.end("An exception occurred"); // OK
+    reply.raw.end("An exception occurred"); // OK
     return;
   }
 });
 
-app.listen(3000);
-console.log("Listening on port 3000...");
+// Run the server and report out to the logs
+fastify.listen(process.env.PORT, function(err, address) {
+  if (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+  console.log(`Your app is listening on ${address}`);
+  fastify.log.info(`server listening on ${address}`);
+});
