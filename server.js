@@ -1,9 +1,4 @@
-/**
- * This is the main Node.js server script for your project
- * Check out the two endpoints this back-end API provides in fastify.get and fastify.post below
- */
-
-// required modules for conversion stufff
+// Required modules
 const path = require("path");
 const pdf = require("pdf-parse");
 const excel = require("exceljs");
@@ -21,42 +16,22 @@ fastify.register(require("fastify-file-upload"));
 // Setup our static files
 fastify.register(require("fastify-static"), {
   root: path.join(__dirname, "public"),
-  prefix: "/" // optional: default '/'
+  prefix: "/"
 });
-
-// fastify-formbody lets us parse incoming forms
-fastify.register(require("fastify-formbody"));
-
-// point-of-view is a templating manager for fastify
-fastify.register(require("point-of-view"), {
-  engine: {
-    handlebars: require("handlebars")
-  }
-});
-
-// Load and parse SEO data
-const seo = require("./src/seo.json");
-if (seo.url === "glitch-default") {
-  seo.url = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
-}
 
 /**
  * Our home page route
  *
- * Returns src/pages/index.hbs with data built into it
+ * Returns src/pages/index.hbs
  */
 fastify.get("/", function(request, reply) {
-  // params is an object we'll pass to our handlebars template
-  let params = { seo: seo };
-
-  // The Handlebars code will be able to access the parameter values and build them into the page
-  reply.view("/src/pages/index.hbs", params);
+  reply.sendFile("index.html");
 });
 
 // Convert the AFI into plaintext and ask the user where to save
-function convertAFI(dataBuffer, reply) {
+function convertAFI(name, data, reply) {
   //console.log("Converting AFI to Excel...")
-  pdf(dataBuffer)
+  pdf(data)
     .then(data => {
       // clean the text by removing all line breaks before paragraph numberings
       var cleanedText = data.text.replace(/\n[^\d+\.]/g, "");
@@ -147,7 +122,8 @@ function convertAFI(dataBuffer, reply) {
       // of the converted PDF now stored in the buffer
       reply.raw.writeHead(200, {
         "Content-Type": "application/octet-stream",
-        "Content-disposition": "attachment; filename=afi.xlsx"
+        "Content-disposition":
+          "attachment; filename=" + name.replace(".pdf", "") + ".xlsx"
       });
       reply.raw.write(buffer);
       reply.raw.end();
@@ -176,7 +152,7 @@ fastify.post("/upload", async (request, reply) => {
           flags: "a"
         });
         logStream.end(afi.name + "\n");
-        convertAFI(afi.data, reply);
+        convertAFI(afi.name, afi.data, reply);
       }
     }
   } catch (err) {
