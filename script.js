@@ -1,32 +1,20 @@
-var datass = '';
-var DataArr = [];
 pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/build/pdf.worker.js';
 
 function ExtractText() {
   var input = document.getElementById("file-id");
-  var fReader = new FileReader();
-  fReader.readAsDataURL(input.files[0]);
-  console.log(input.files[0]);
-  fReader.onloadend = function (event) {
-    convertDataURIToBinary(event.target.result);
+  var fileReader = new FileReader();
+  fileReader.readAsDataURL(input.files[0]);
+  fileReader.onloadend = function (event) {
+    convertToBinary(event.target.result);
   }
 }
 
-var BASE64_MARKER = ';base64,';
-
-function convertDataURIToBinary(dataURI) {
-
+function convertToBinary(dataURI) {
+  const BASE64_MARKER = ';base64,';
   var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
   var base64 = dataURI.substring(base64Index);
-  var raw = window.atob(base64);
-  var rawLength = raw.length;
-  var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-  for (var i = 0; i < rawLength; i++) {
-    array[i] = raw.charCodeAt(i);
-  }
-  pdfAsArray(array)
-
+  var pdfData = atob(base64);
+  pdfAsArray(pdfData)
 }
 
 function getPageText(pageNum, PDFDocumentInstance) {
@@ -52,9 +40,9 @@ function getPageText(pageNum, PDFDocumentInstance) {
   });
 }
 
-function pdfAsArray(array) {
+function pdfAsArray(pdfData) {
 
-  var loadingTask = pdfjsLib.getDocument({data: array});
+  var loadingTask = pdfjsLib.getDocument({data: pdfData});
 
   loadingTask.promise.then(function(pdf) {
 
