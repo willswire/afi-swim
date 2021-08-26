@@ -1,6 +1,6 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/build/pdf.worker.js';
 
-function ExtractText() {
+function swim() {
   var input = document.getElementById("file-id");
   var fileReader = new FileReader();
   fileReader.readAsDataURL(input.files[0]);
