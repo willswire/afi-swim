@@ -1,6 +1,12 @@
-<script src="./pdfjs/build/pdf.js"></script>
+<script src="./pdfjs/pdf.js"></script>
+<script src="./sheetjs/xlsx.full.min.js"></script>
+<script src="./filesaver/FileSaver.min.js"></script>
 <script src="./script.js"></script>
+
 <input type="file" id="file-id" name="file_name" onchange="swim();">
+<br>
+<br>
+<button type="button" onClick="download()">Download</button>
 
 <!-- a container for the output -->
 <div id="output"></div>

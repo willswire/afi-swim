@@ -1,4 +1,4 @@
-pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/build/pdf.worker.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.js';
 
 function swim() {
   var input = document.getElementById("file-id");
@@ -42,9 +42,9 @@ function getPageText(pageNum, PDFDocumentInstance) {
 
 function pdfAsArray(pdfData) {
 
-  var loadingTask = pdfjsLib.getDocument({data: pdfData});
+  var loadingTask = pdfjsLib.getDocument({ data: pdfData });
 
-  loadingTask.promise.then(function(pdf) {
+  loadingTask.promise.then(function (pdf) {
 
     var pdfDocument = pdf;
     // Create an array that will contain our promises
@@ -61,26 +61,51 @@ function pdfAsArray(pdfData) {
     // Execute all the promises
     Promise.all(pagesPromises).then(function (pagesText) {
 
-      // Display text of all the pages in the console
-      // e.g ["Text content page 1", "Text content page 2", "Text content page 3" ... ]
-      console.log(pagesText); // representing every single page of PDF Document by array indexing
-      console.log(pagesText.length);
-      var outputStr = "";
+      var raw = "";
       for (var pageNum = 0; pageNum < pagesText.length; pageNum++) {
-        console.log(pagesText[pageNum]);
-        outputStr = "";
-        outputStr = "<br/><br/>Page " + (pageNum + 1) + " contents <br/> <br/>";
-
-        var div = document.getElementById('output');
-
-        div.innerHTML += (outputStr + pagesText[pageNum]);
-
+        raw += pagesText[pageNum]
       }
 
+      var regex = /\s(\d+\.)+\s/g;
+      var output = raw.replace(regex, `<br><br>$&`)
+
+      var div = document.getElementById('output');
+      div.innerHTML = output;
     });
 
   }, function (reason) {
     // PDF loading error
     console.error(reason);
   });
+}
+
+// Excel Testing
+
+var wb = XLSX.utils.book_new();
+wb.Props = {
+  Title: "Test Workbook",
+  Subject: "Test",
+  Author: "AFI SWIM",
+  CreatedDate: new Date()
+};
+
+wb.SheetNames.push("Test Sheet");
+
+var ws_data = [['hello', 'world']];  //a row with 2 columns
+
+var ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+wb.Sheets["Test Sheet"] = ws;
+
+var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+function s2ab(s) {
+  var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+  var view = new Uint8Array(buf);  //create uint8array as viewer
+  for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+  return buf;
+}
+
+function download() {
+  saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'test.xlsx');
 }
