@@ -1,11 +1,13 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.js';
 
 var WBOUT;
+var NAME;
 
 function swim() {
   var input = document.getElementById("file-id");
   var fileReader = new FileReader();
   fileReader.readAsDataURL(input.files[0]);
+  NAME = input.files[0].name.split(".pdf")[0]
   fileReader.onloadend = function (event) {
     convertToBinary(event.target.result);
   }
@@ -62,7 +64,6 @@ function pdfAsArray(pdfData) {
 
     // Execute all the promises
     Promise.all(pagesPromises).then(function (pagesText) {
-
       var raw = "";
       for (var pageNum = 0; pageNum < pagesText.length; pageNum++) {
         raw += pagesText[pageNum]
@@ -70,18 +71,22 @@ function pdfAsArray(pdfData) {
 
       var regex = /\s(\d+\.)+\s/g;
       var output = raw.replace(regex, `<zx>$&`).split(`<zx> `)
-      console.log(output)
 
       var formattedOutput = []
       for (i = 0; i < output.length; i++) {
-        formattedOutput[i] = output[i].split(/ (.*)/);
+        formattedOutput[i] = output[i].split(/ (.*)/)
+        if (output[i].includes("shall")) {
+          formattedOutput[i][2] = "*"
+        }
+        if (output[i].includes("will")) {
+          formattedOutput[i][3] = "*"
+        }
+        if (output[i].includes("must")) {
+          formattedOutput[i][4] = "*"
+        }
       }
-      console.log(formattedOutput)
 
       writeToWorkbook(formattedOutput)
-
-      // var div = document.getElementById('output');
-      // div.innerHTML = output;
     });
 
   }, function (reason) {
@@ -90,24 +95,17 @@ function pdfAsArray(pdfData) {
   });
 }
 
-// Excel Testing
-
 function writeToWorkbook(data) {
   var wb = XLSX.utils.book_new();
-
   wb.Props = {
-    Title: "AFI 1-1",
+    Title: NAME,
     CreatedDate: new Date()
   };
+  wb.SheetNames.push(NAME);
 
-  wb.SheetNames.push("AFI 1-1");
-
-  var ws = XLSX.utils.aoa_to_sheet([ "Section,Content".split(",") ]);
-
+  var ws = XLSX.utils.aoa_to_sheet([ "Section,Content,Shall,Will,Must".split(",") ]);
   XLSX.utils.sheet_add_aoa(ws, data, {origin: "A2"});
-  
-  wb.Sheets["AFI 1-1"] = ws;
-  
+  wb.Sheets[NAME] = ws;
   WBOUT = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
 }
 
@@ -119,5 +117,5 @@ function s2ab(s) {
 }
 
 function download() {
-  saveAs(new Blob([s2ab(WBOUT)], { type: "application/octet-stream" }), 'test.xlsx');
+  saveAs(new Blob([s2ab(WBOUT)], { type: "application/octet-stream" }), NAME + '.xlsx');
 }
