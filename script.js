@@ -1,5 +1,7 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.js';
 
+var WBOUT;
+
 function swim() {
   var input = document.getElementById("file-id");
   var fileReader = new FileReader();
@@ -67,10 +69,19 @@ function pdfAsArray(pdfData) {
       }
 
       var regex = /\s(\d+\.)+\s/g;
-      var output = raw.replace(regex, `<br><br>$&`)
+      var output = raw.replace(regex, `<zx>$&`).split(`<zx> `)
+      console.log(output)
 
-      var div = document.getElementById('output');
-      div.innerHTML = output;
+      var formattedOutput = []
+      for (i = 0; i < output.length; i++) {
+        formattedOutput[i] = output[i].split(/ (.*)/);
+      }
+      console.log(formattedOutput)
+
+      writeToWorkbook(formattedOutput)
+
+      // var div = document.getElementById('output');
+      // div.innerHTML = output;
     });
 
   }, function (reason) {
@@ -81,23 +92,24 @@ function pdfAsArray(pdfData) {
 
 // Excel Testing
 
-var wb = XLSX.utils.book_new();
-wb.Props = {
-  Title: "Test Workbook",
-  Subject: "Test",
-  Author: "AFI SWIM",
-  CreatedDate: new Date()
-};
+function writeToWorkbook(data) {
+  var wb = XLSX.utils.book_new();
 
-wb.SheetNames.push("Test Sheet");
+  wb.Props = {
+    Title: "AFI 1-1",
+    CreatedDate: new Date()
+  };
 
-var ws_data = [['hello', 'world']];  //a row with 2 columns
+  wb.SheetNames.push("AFI 1-1");
 
-var ws = XLSX.utils.aoa_to_sheet(ws_data);
+  var ws = XLSX.utils.aoa_to_sheet([ "Section,Content".split(",") ]);
 
-wb.Sheets["Test Sheet"] = ws;
-
-var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+  XLSX.utils.sheet_add_aoa(ws, data, {origin: "A2"});
+  
+  wb.Sheets["AFI 1-1"] = ws;
+  
+  WBOUT = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+}
 
 function s2ab(s) {
   var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
@@ -107,5 +119,5 @@ function s2ab(s) {
 }
 
 function download() {
-  saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'test.xlsx');
+  saveAs(new Blob([s2ab(WBOUT)], { type: "application/octet-stream" }), 'test.xlsx');
 }
