@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AFI SWiM</title>
+
+    <!-- Meta tags for SEO and social sharing -->
+    <link rel="canonical" href="https://www.afiswim.com">
+    <meta name="description" content="Extract shall, will, and must keywords from AFIs">
+    <meta property="og:title" content="AFI SWiM">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.afiswim.com">
+    <meta property="og:description" content="Extract shall, will, and must keywords from AFIs">
+    <meta name="twitter:card" content="summary">
+
+    <!-- Import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+
+    <!-- Import scripts -->
+    <script src="./pdfjs/pdf.js"></script>
+    <script src="./sheetjs/xlsx.full.min.js"></script>
+    <script src="./filesaver/FileSaver.min.js"></script>
+    <script src="./script.js"></script>
+</head>
+
+<body class="d-flex flex-column">
+    <header class="text-light text-center mt-auto bg-success">
+        <strong>UNCLASSIFIED</strong>
+    </header>
+    <main role="main" class="container w-75">
+        <div class="jumbotron mt-3">
+            <h1>AFI SWiM</h1>
+            <p class="lead">
+                Extract <b>Shall</b>, <b>Will</b>, and <b>Must</b> keywords from AFIs
+                for better readability and reference.
+            </p>
+            <hr class="my-4" />
+            <p>
+                'Upload' your Air Force Instruction manual in PDF format.
+                'Download' the resulting Excel workbook, which should begin immediately.
+            </p>
+            <p>
+                Also check out the <strong><a href="https://afiexplorer.com">AFI Explorer</a></strong> app!
+            </p>
+            <label class="btn btn-lg btn-secondary">
+                Upload<input type="file" id="file-id" name="file_name" onchange="swim();" hidden />
+            </label>
+            <label class="btn btn-lg btn-primary">
+                Download<button type="button" onClick="download();" hidden/>
+            </label>
+            <div id="content"></div>
+        </div>
+    </main>
+    <footer class="text-light text-center pt-auto bg-success fixed-bottom">
+        <strong>UNCLASSIFIED</strong>
+    </footer>
+</body>
+
+</html>
